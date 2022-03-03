@@ -4,7 +4,8 @@ if __name__ == "__main__":
         #print(inp)
         inp_dict = json.load(inp)
         imdata = inp_dict['imdata']
-        print(imdata)
+        #print(imdata)
+        #print(json.dumps(imdata, indent = 4, sort_keys=True)) # beatiful output
     print("=======================================================================================")
     print("DN                                                 Description           Speed    MTU") 
     print("-------------------------------------------------- --------------------  ------  ------")
