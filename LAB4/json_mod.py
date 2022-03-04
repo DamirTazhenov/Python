@@ -14,4 +14,5 @@ if __name__ == "__main__":
         tmp_description = item['l1PhysIf']["attributes"]["descr"]
         tmp_speed = item["l1PhysIf"]["attributes"]['speed']
         tmp_mtu = item["l1PhysIf"]["attributes"]['mtu']
-        print("{} {} {} {}".format(tmp_dn,tmp_description,tmp_speed,tmp_mtu))
+        print("{0:50} {1:20} {2:9} {3:4}".format(tmp_dn,tmp_description,tmp_speed,tmp_mtu)) 
+        #{0:50} 0 the index of variable 50 is max allowed string
