@@ -11,10 +11,8 @@ half_width, half_height = width // 2, height // 2
 image_gallery = {}
 
 def blit_Rotate(surf, image, topleft, angle):
-
     rotated_image = pygame.transform.rotate(image, angle)
     new_rect = rotated_image.get_rect(center = image.get_rect(topleft = topleft).center)
-
     surf.blit(rotated_image, new_rect)
 
 def get_image(path):
@@ -54,14 +52,14 @@ while not done:
 
     timenow = datetime.now()
     minutess, secondss = timenow.minute, timenow.second
-    minute_grad, seconds_grad = -minutess * 6, -secondss * 6
+    minute_grad, seconds_grad = minutess * 6, secondss * 6
 
     time_render = font.render(f'{timenow:%H:%M:%S}', True, pygame.Color('white'), pygame.Color('black'))
     mainscreen.blit(time_render, (0,0))
 
     
-    blit_Rotate(mainscreen, minutes, start_position, minute_grad)
-    blit_Rotate(mainscreen, seconds, start_position, seconds_grad)
+    blit_Rotate(mainscreen, minutes, start_position, -minute_grad)
+    blit_Rotate(mainscreen, seconds, start_position, -seconds_grad)
 
     pygame.display.flip()
     clock.tick(60)
