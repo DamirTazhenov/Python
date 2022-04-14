@@ -62,6 +62,4 @@ while not done:
     blit_Rotate(mainscreen, seconds, start_position, -seconds_grad)
 
     pygame.display.flip()
-    clock.tick(60)
-    
-    
+    clock.tick(60)    
