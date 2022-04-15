@@ -42,19 +42,19 @@ while not done:
         if event.type == pygame.KEYDOWN: # for changing
             if event.key == pygame.K_b:
                 color = colors['blue']
-            if event.key == pygame.K_g:
+            if event.key == pygame.K_1:
                 color = colors['green']
-            if event.key == pygame.K_r:
+            if event.key == pygame.K_2:
                 color = colors['red']
-            if event.key == pygame.K_w:
+            if event.key == pygame.K_3:
                 color = colors['white']
-            if event.key == pygame.K_o:
+            if event.key == pygame.K_4:
                 color = colors['olive']
-            if event.key == pygame.K_n:
+            if event.key == pygame.K_5:
                 color = colors['brown']
-            if event.key == pygame.K_u:
+            if event.key == pygame.K_6:
                 color = colors['purple']
-            if event.key == pygame.K_a:
+            if event.key == pygame.K_7:
                 color = colors['sky blue']
             if event.key == pygame.K_p:
                 figure = 'pen'
