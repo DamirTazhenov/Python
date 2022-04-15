@@ -183,7 +183,7 @@ while running:
             snake1.score+=bonus.food_size
             bonus.gen(snake1.level,snake1.elements)
     if frame_counter%snake_frame_speed==0:
-        if snake1.score>20:
+        if snake1.score > 30 and snake1.level == 1:
             snake1.level +=1
         print(snake1.size)
         screen.fill((0, 0, 0))
@@ -194,8 +194,10 @@ while running:
         snake1.move()    
         snake1.draw()
         food.draw()
-        scores = pygame.font.SysFont("Verdana", 10).render(str(snake1.score), True, (0, 0, 0))
-        screen.blit(scores,(0,0))
+        scores = pygame.font.SysFont("Verdana", 12).render("Score: "+str(snake1.score), True, (255,255,255))
+        levels = pygame.font.SysFont("Verdana", 12).render("Level: "+str(snake1.level), True, (255,255,255))
+        screen.blit(scores,(20,20))
+        screen.blit(levels,(20,40))
         if bonus.is_exist:
             bonus.draw()
         
