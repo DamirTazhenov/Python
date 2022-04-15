@@ -4,7 +4,7 @@ from tkinter import W
 pygame.init()
 resolution = (500,500)
 screen = pygame.display.set_mode(resolution)
-game_over = pygame.font.SysFont("Verdana", 60).render("Game Over", True, (255, 255, 255))
+game_over = pygame.font.SysFont("Verdana", 60).render("Game Over", True, (128, 128, 128))
 
 def create_rect(width, height, border, color, border_color):
     surf = pygame.Surface((width+border*2, height+border*2), pygame.SRCALPHA)
@@ -25,6 +25,7 @@ class Snake:
         self.is_alive = True
         self.level = 1
         self.size = 1
+        self.food_size = 1
         self.elements = [[x, y]]  # [[x0, y0], [x1, y1], [x2, y2] ...] (i) -> (i - 1)
         self.radius = 10
         self.dx = 0  # Right/Left
@@ -49,7 +50,7 @@ class Snake:
 
     def move(self):
         if self.is_add:
-            self.add_to_snake()
+            self.add_to_snake(self.food_size)
 
         for i in range(self.size - 1, 0, -1):
             self.elements[i][0] = self.elements[i - 1][0]
@@ -78,22 +79,34 @@ class Snake:
     def eat(self, foodx, foody):
         x = self.elements[0][0]
         y = self.elements[0][1]
-        if foodx <= x <= foodx + 20 and foody <= y <= foody + 20:
+        if foodx-20 <= x <= foodx + 20 and foody-20 <= y <= foody + 20:
             return True
         return False
     
 
 border_res = (20,480)
 class Food:
-    def __init__(self,food_size,is_exist=True):
+    def __init__(self,food_size,is_exist=True,level=1):
         self.is_exist = is_exist
         self.food_size = food_size
+        self.level = level
         self.x = random.randint(border_res[0],border_res[1])
         self.y = random.randint(border_res[0],border_res[1])
 
-    def gen(self):
+    def gen(self,level, elements):    
         self.x = random.randint(border_res[0],border_res[1])
         self.y = random.randint(border_res[0],border_res[1])
+        
+        for i in elements:
+            if self.x == i[0] and self.y == i[1]:
+                print("It is work!")
+                self.x = random.randint(border_res[0],border_res[1])
+                self.y = random.randint(border_res[0],border_res[1])
+
+        if level>1: #level 2 walls collision
+            while (((self.x >= 60 and self.x <= 180 and self.y >= 60 and self.y <= 180) or (self.x >= 240 and self.x <= 360 and self.y >= 240 and self.y <= 360))):
+                self.x = random.randint(border_res[0],border_res[1])
+                self.y = random.randint(border_res[0],border_res[1])
 
     def draw(self):
         pygame.draw.rect(screen, (0, 255, 0), (self.x, self.y, 10+self.food_size, 10 + self.food_size))
@@ -101,8 +114,8 @@ class Food:
 
 border = create_rect(485, 485, 10, (0, 0, 0),(255, 255, 255))
 snake1 = Snake(250, 250)
-food = Food(1)
-bonus = Food(5,False)
+food = Food(3)
+bonus = Food(7,False)
 
 running = True
 
@@ -118,13 +131,10 @@ clock = pygame.time.Clock()
 spawn_status = True
 
 spawn_bonus = pygame.USEREVENT + 1
-pygame.time.set_timer(spawn_bonus, 4000)
-spawn_pause = pygame.USEREVENT + 1
-pygame.time.set_timer(spawn_pause, 5000)
+pygame.time.set_timer(spawn_bonus, 10000)
 
 start_pos = 250
 snake = [(start_pos,start_pos)]
-spawn_status = False
 
 while running:
     frame_counter+=1
@@ -132,16 +142,11 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         if event.type == spawn_bonus:
-            bonus.gen()
             if bonus.is_exist:
                 bonus.is_exist = False
             elif bonus.is_exist == False:
+                bonus.gen(snake1.level,snake1.elements)
                 bonus.is_exist=True
-            spawn_status = True
-            
-        """if event.type == spawn_pause  and bonus.is_exist==False and spawn_status==True:
-            print("Spawn pause!!!!!!!!!!!!!!!!!")
-            spawn_status = False"""
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 running = False
@@ -161,17 +166,22 @@ while running:
                 snake1.dx = 0
                 snake1.dy = d
 
-    if snake1.eat(food.x, food.y):
-        snake1.is_add = True
-        snake1.score+=3
-        food.gen()
-    if snake1.eat(bonus.x, bonus.y):
-        snake1.is_add = True
-        bonus.is_exist = False
-        snake1.score+=1
+    
     
     #if len(snake1.elements)
     #[pygame.draw.rect(screen, (0, 255, 0), (self.x, self.y, self.food_size, self.food_size))]
+    if frame_counter:
+        if snake1.eat(food.x, food.y):
+            snake1.is_add = True
+            snake1.food_size = food.food_size
+            snake1.score+=food.food_size
+            food.gen(snake1.level,snake1.elements)
+        if snake1.eat(bonus.x, bonus.y):
+            snake1.is_add = True
+            snake1.food_size = bonus.food_size
+            bonus.is_exist = False
+            snake1.score+=bonus.food_size
+            bonus.gen(snake1.level,snake1.elements)
     if frame_counter%snake_frame_speed==0:
         if snake1.score>20:
             snake1.level +=1
@@ -179,7 +189,6 @@ while running:
         screen.fill((0, 0, 0))
         screen.blit(border,(0,0))
         if (snake1.walls()):
-            print("level more 2")
             pygame.draw.rect(screen, (255,255,255), pygame.Rect(70, 70, 100, 100)) # 70 - 170
             pygame.draw.rect(screen, (255,255,255), pygame.Rect(250, 250, 100, 100)) #250 - 350
         snake1.move()    
