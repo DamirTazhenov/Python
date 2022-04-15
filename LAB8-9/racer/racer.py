@@ -7,7 +7,8 @@ pygame.init()
 pygame.display.set_caption("Racer")
 W = 400
 H = 600
-SPEED = 2
+CAR_SPEED = 5
+COIN_SPEED = 7
 SCORE = 0
 
 WHITE = (255, 255, 255)
@@ -33,13 +34,13 @@ class Coin(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(self.image, (self.image.get_width() * scale, self.image.get_height() * scale))
 
         self.rect = self.image.get_rect()
-        self.rect.center=(randint(40,W-40),0)
+        self.rect.center=(randint(40,W-40),3 * -600 * self.point)
 
     def move(self):
-        self.rect.move_ip(0,10)
+        self.rect.move_ip(0, COIN_SPEED)
         if (self.rect.bottom > 600):
             self.rect.top = 0
-            self.rect.center = (randint(30, 370), 0)
+            self.rect.center = (randint(30, 370), 3 * -600 * self.point)
  
     def draw(self, surface):
         surface.blit(self.image, self.rect) 
@@ -49,13 +50,13 @@ class Enemy(pygame.sprite.Sprite):
         super().__init__() 
         self.image = pygame.image.load(path+"Enemy.png")
         self.rect = self.image.get_rect()
-        self.rect.center=(randint(40,W-40),0) 
+        self.rect.center=(randint(40,W-40), 2 * -600) 
  
     def move(self):
-        self.rect.move_ip(0,SPEED)
+        self.rect.move_ip(0, CAR_SPEED)
         if (self.rect.bottom > 600):
             self.rect.top = 0
-            self.rect.center = (randint(30, 370), 0)
+            self.rect.center = (randint(30, 370), 3 * -600)
  
     def draw(self, surface):
         surface.blit(self.image, self.rect) 
@@ -86,7 +87,7 @@ class Player(pygame.sprite.Sprite):
 Player1 = Player()
 Enemy1 = Enemy()
 Coin1 = Coin(1,1)
-Coin2 = Coin(1.3,2)
+Coin2 = Coin(1.3,5)
 
 #Creating Sprites Groups
 enemies = pygame.sprite.Group()
@@ -102,7 +103,7 @@ all_sprites.add(Coin2)
 
 #Adding a new User event 
 INC_SPEED = pygame.USEREVENT + 1
-pygame.time.set_timer(INC_SPEED, 1000)
+pygame.time.set_timer(INC_SPEED, 5000)
 
 sc = pygame.display.set_mode((W, H))
 
@@ -110,7 +111,7 @@ def coin_in(Coin):
     global SCORE 
     SCORE += Coin.point
     Coin.rect.top = 100
-    Coin.rect.center = (randint(30, 370), 0)
+    Coin.rect.center = (randint(30, 370), 3 * -600 * Coin.point)
     pygame.display.update()
     
 
@@ -120,7 +121,8 @@ while not done:
         if event.type == pygame.QUIT:
             done = True
         if event.type == INC_SPEED:
-              SPEED += 0.2
+              CAR_SPEED += 0.4
+              COIN_SPEED += 0.2
     
     sc.blit(background, (0,0))
 

@@ -1,79 +1,68 @@
-import random
-
+from turtle import position
 import pygame
 
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
-RED = (255, 0, 0)
+def main():
+    pygame.init()
+    screen = pygame.display.set_mode((640, 480))
+
+    baseLayer = pygame.Surface((640, 480))
+
+    clock = pygame.time.Clock()
+    
+    prevX = -1
+    prevY = -1
+    currentX = -1
+    currentY = -1
+        
+    screen.fill((0, 0, 0))
+
+    isMouseDown = False
+
+    while True:
+        
+        pressed = pygame.key.get_pressed()
+
+        
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1: 
+                    isMouseDown = True
+                    currentX =  event.pos[0]
+                    currentY =  event.pos[1]    
+                    prevX =  event.pos[0]
+                    prevY =  event.pos[1]
+
+            if event.type == pygame.MOUSEBUTTONUP:
+                isMouseDown = False
+                baseLayer.blit(screen, (0, 0))
 
 
-class Block(pygame.sprite.Sprite):
-    def __init__(self, color, width, height):
-        super().__init__()
-        self.image = pygame.Surface([width, height])
-        self.image.fill(color)
-        self.rect = self.image.get_rect()
+            if event.type == pygame.MOUSEMOTION:
+                if isMouseDown:
+                    currentX =  event.pos[0]
+                    currentY =  event.pos[1]
+        
 
-    def reset_position(self):
-        self.rect.y = random.randrange(-300, -20)
-        self.rect.x = random.randrange(680)
+        if isMouseDown and prevX != -1 and prevY != -1 and currentX != -1 and currentY != -1:
+             screen.blit(baseLayer, (0, 0))
+             r = calculateRect(prevX, prevY, currentX, currentY)
+             pygame.draw.rect(screen, (255,255, 255),pygame.Rect(r), 1)
+             #print("{} {} {} {}".format(prevX, prevY, currentX, currentY))
+        
+        pygame.display.flip()
+        clock.tick(60)
+        
+def calculateRect(x1, y1, x2, y2):
+    return pygame.Rect(min(x1, x2), min(y1, y2), abs(x1 - x2), abs(y1 - y2))
+def calculateSquare(x1, y1, x2, y2):
+    x = abs(x1-x2)
+    y = abs(y1,y2)
+    a = min(x,y)
+    return pygame.Rect(x1,y1)
 
-    def update(self):
-        self.rect.y += 1
-        if self.rect.y > 410:
-            self.reset_position()
+#20,50 400,100
 
-
-class Player(Block):
-    def update(self):
-        pos = pygame.mouse.get_pos()
-        self.rect.x = pos[0]
-        self.rect.y = pos[1]
-
-
-pygame.init()
-
-screen_width = 700
-screen_height = 400
-
-screen = pygame.display.set_mode((screen_width, screen_height))
-
-block_list = pygame.sprite.Group()
-
-all_sprites_list = pygame.sprite.Group()
-
-for i in range(50):
-    block = Block(BLACK, 20, 15)
-    block.rect.x = random.randrange(screen_width)
-    block.rect.y = random.randrange(screen_height)
-    block_list.add(block)
-    all_sprites_list.add(block)
-
-player = Player(RED, 20, 15)
-all_sprites_list.add(player)
-
-done = False
-clock = pygame.time.Clock()
-score = 0
-
-while not done:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            done = True
-
-    screen.fill(WHITE)
-
-    all_sprites_list.update()
-
-    block_hit_list = pygame.sprite.spritecollide(player, block_list,
-                                                 False)  # True = Remove
-    for block in block_hit_list:
-        block.reset_position()
-        score += 1
-        print(score)
-
-    all_sprites_list.draw(screen)
-    pygame.display.update()
-    clock.tick(60)
-
-pygame.quit()
+main()
