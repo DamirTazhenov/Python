@@ -118,26 +118,30 @@ clock = pygame.time.Clock()
 spawn_status = True
 
 spawn_bonus = pygame.USEREVENT + 1
-pygame.time.set_timer(spawn_bonus, 3000)
+pygame.time.set_timer(spawn_bonus, 4000)
 spawn_pause = pygame.USEREVENT + 1
-pygame.time.set_timer(spawn_pause, 2000)
+pygame.time.set_timer(spawn_pause, 5000)
 
 start_pos = 250
 snake = [(start_pos,start_pos)]
+spawn_status = False
 
 while running:
     frame_counter+=1
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        if event.type == spawn_bonus and bonus.is_exist==False:
-            print("Big is created!")
+        if event.type == spawn_bonus:
             bonus.gen()
-            bonus.is_exist=True
-            
-        if event.type == spawn_pause and bonus.is_exist==False :
-            print("Spawn pause!!!!!!!!!!!!!!!!!")
+            if bonus.is_exist:
+                bonus.is_exist = False
+            elif bonus.is_exist == False:
+                bonus.is_exist=True
             spawn_status = True
+            
+        """if event.type == spawn_pause  and bonus.is_exist==False and spawn_status==True:
+            print("Spawn pause!!!!!!!!!!!!!!!!!")
+            spawn_status = False"""
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 running = False
