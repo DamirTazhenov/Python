@@ -7,7 +7,7 @@ screen = pg.display.set_mode((800,600))
 
 index = 0
 
-path = u"C:\PP2\lab7\music"
+path = u"D:/Study/KBTU/2 Semester/PP2/LAB7/pyplayer/music"
 playlist = []
 print ("\nplaylist:")
 for filename in os.listdir(path):
@@ -22,7 +22,7 @@ def get_music(path):
     global music_playlist
     song = music_playlist.get(path)
     if song == None:
-        canonic_path = u'C:/PP2/lab7/music/'+path
+        canonic_path = u'D:/Study/KBTU/2 Semester/PP2/LAB7/pyplayer/music/'+path
         song = pg.mixer.music.load(canonic_path)
         music_playlist[path]=song
     return(song)

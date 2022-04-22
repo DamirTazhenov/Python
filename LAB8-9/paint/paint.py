@@ -2,36 +2,34 @@ import random
 import pygame
 import math
 
-BLACK = (0, 0, 0)
+colors = {
+    'red' : (255, 0, 0),
+    'blue' : (0, 0, 255),
+    'green' : (0, 255, 0),
+    'black': (0,0,0),
+    'white' : (255, 255, 255),
+    'purple' : (255, 0, 255),
+    'brown' : (150, 75, 0),
+    'olive' : (128, 128, 0),
+    'sky blue' : (0, 255, 255),
+}
+
 pygame.init()
 
 screen = pygame.display.set_mode((800, 600))
 pygame.display.set_caption('Paint')
-screen.fill(BLACK)
+screen.fill(colors['black'])
 base = pygame.Surface((800, 600))
 
 draw_on = False
 
 pos_last = (0, 0)
 
-colors = {
-    'red' : (255, 0, 0),
-    'blue' : (0, 0, 255),
-    'green' : (0, 255, 0),
-    'white' : (255, 255, 255),
-    'purple' : (255, 0, 255),
-    'brown' : (150, 75, 0),
-    'olive' : (128, 128, 0),
-    'sky blue' : (0, 255, 255)
-}
-
 color = colors['green']
 figure = 'pen'
 
 def Rect_pos(x1, y1, x2, y2):
     return pygame.Rect(min(x1, x2), min(y1, y2), abs(x1 - x2), abs(y1 - y2))
-
-
 
 done = False
 
@@ -40,7 +38,7 @@ while not done:
         if event.type == pygame.QUIT:
             done = True
         if event.type == pygame.KEYDOWN: # for changing
-            if event.key == pygame.K_b:
+            if event.key == pygame.K_8: #colors on buttons  1 - 8
                 color = colors['blue']
             if event.key == pygame.K_1:
                 color = colors['green']
@@ -91,7 +89,7 @@ while not done:
                     pygame.draw.line(screen, color, [pos_last[0], pos_last[1]], [event.pos[0], event.pos[1]], 5)
                     pos_last = event.pos
                 if figure == 'erase':
-                    pygame.draw.circle(screen, BLACK, (event.pos[0], event.pos[1]), 9)
+                    pygame.draw.circle(screen, color['black'], (event.pos[0], event.pos[1]), 9)
                 if figure == 'square':
                     screen.blit(base, (0, 0))
                     a = Rect_pos(pos_last[1], pos_last[1], event.pos[1], event.pos[1])

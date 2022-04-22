@@ -150,7 +150,7 @@ while running:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 running = False
-            # if event.key == pygame.K_SPACE:
+            #if event.key == pygame.K_SPACE:
             #     snake1.is_add = True
             #     snake2.is_add = True
             if event.key == pygame.K_RIGHT and snake1.dx != -d:
@@ -169,7 +169,6 @@ while running:
     
     
     #if len(snake1.elements)
-    #[pygame.draw.rect(screen, (0, 255, 0), (self.x, self.y, self.food_size, self.food_size))]
     if frame_counter:
         if snake1.eat(food.x, food.y):
             snake1.is_add = True
