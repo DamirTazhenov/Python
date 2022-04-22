@@ -31,12 +31,12 @@ figure = 'pen'
 def Rect_pos(x1, y1, x2, y2):
     return pygame.Rect(min(x1, x2), min(y1, y2), abs(x1 - x2), abs(y1 - y2))
 
-done = False
+done = 0
 
 while not done:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            done = True
+            done = 1
         if event.type == pygame.KEYDOWN: # for changing
             if event.key == pygame.K_8: #colors on buttons  1 - 8
                 color = colors['blue']
@@ -73,7 +73,7 @@ while not done:
         if event.type == pygame.MOUSEBUTTONDOWN:
             draw_on = True
             pos_last = event.pos
-        if event.type == pygame.MOUSEBUTTONUP:
+        if event.type == pygame.MOxUSEBUTTONUP:
             draw_on = False
             base.blit(screen, (0, 0))
         if event.type == pygame.MOUSEMOTION: # functions for figures
