@@ -73,7 +73,7 @@ while not done:
         if event.type == pygame.MOUSEBUTTONDOWN:
             draw_on = True
             pos_last = event.pos
-        if event.type == pygame.MOxUSEBUTTONUP:
+        if event.type == pygame.MOUSEBUTTONUP:
             draw_on = False
             base.blit(screen, (0, 0))
         if event.type == pygame.MOUSEMOTION: # functions for figures
