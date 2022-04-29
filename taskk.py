@@ -16,6 +16,8 @@ for i in range(len(matrix)):
 print(dict)
 
 word = input()
+"""
 for i in dict:
     if word[0] == i[]:
         base_point = i[]
+"""
