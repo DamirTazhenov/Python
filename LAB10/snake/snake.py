@@ -1,17 +1,35 @@
-import random, pygame, time, sys
+import random, pygame, time, sys, os, platform
 from tkinter import W
 import psycopg2
 from soupsieve import select
 from config import host, user, password, db_name
 
+def banner():
+    if platform.system().lower()=="windows":
+        os.system("cls")
+    else:
+        os.system("clear")
+    print("""
+░██████╗███╗░░██╗░█████╗░██╗░░██╗███████╗
+██╔════╝████╗░██║██╔══██╗██║░██╔╝██╔════╝
+╚█████╗░██╔██╗██║███████║█████═╝░█████╗░░
+░╚═══██╗██║╚████║██╔══██║██╔═██╗░██╔══╝░░
+██████╔╝██║░╚███║██║░░██║██║░╚██╗███████╗
+╚═════╝░╚═╝░░╚══╝╚═╝░░╚═╝╚═╝░░╚═╝╚══════╝                                                                                                                            
+            By : Tazhenov Damir 
+""")   
+banner()
 def insert(NickName, Score, Level):
     NickName = NickName.strip()
     #print(PNumber)
     with conn.cursor() as cursor:
-        cursor.execute(
+        try:
+            cursor.execute(
             f"insert into SnakeBoard (nickname, score, level) values ('{NickName}','{Score}','{Level}')"
             )
-    print ("[INFO] Insert was complete succesfully!")
+            print ("[INFO] Insert was complete succesfully!")
+        except Exception as ex:
+            print(f"[INFO] Error, inserting is failed - {ex}")
 def print_top():
     y = 170
     with conn.cursor() as cursor:
@@ -215,7 +233,7 @@ try:
                 """
             )
             leaders = cursor.fetchall()
-        print (leaders)
+        #print (leaders)
         time.sleep(2)
         need_input = False
         nickname_input = ""
@@ -306,7 +324,7 @@ try:
             if frame_counter%snake_frame_speed==0:
                 if snake1.score > 30 and snake1.level == 1:
                     snake1.level +=1
-                print(snake1.size)
+                #print(snake1.size)
                 screen.fill((0, 0, 0))
                 screen.blit(border,(0,0))
                 if (snake1.walls()):
