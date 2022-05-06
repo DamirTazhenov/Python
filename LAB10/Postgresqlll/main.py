@@ -2,6 +2,12 @@ from tkinter import EXCEPTION
 import psycopg2
 from config import host, user, password, db_name
 import csv
+def delete(PNumber):
+    with conn.cursor() as cursor:
+        cursor.execute(
+            f"delete from PhoneBook where PhoneNumber = '{PNumber}'"
+        )
+    print("[INFO] Deleting was complete siccesfully!")
 
 def insert(FName, LName, PNumber):
     FName = FName.strip()
@@ -68,9 +74,26 @@ try:
         print(f"[INFO] {cursor.fetchall()}")
 
     #insert data from console
-    with conn.cursor() as cursor:
-        inp = list(map(str,input("Введите данные через пробел!!").split()))
+    '''inp = list(map(str,input("Введите данные через пробел!!").split()))
+    try:
         insert(inp[0],inp[1],inp[2])
+    except Exception as _ex:
+        print(f"Deleting was failed, because {_ex}")'''
+    
+    #deleting data by phone number
+    """inp = input("Input number which you want to delete!")
+    delete(inp.strip())"""
+    #Show by ordering
+    with conn.cursor() as cursor:
+        inp = input("Choose by what coloumn you want to order data: FirstName, LastName or PhineNumber?")
+        inp2 = input("Chose ASC or DESC:")
+        cursor.execute(
+            f"""
+            select * from PhoneBook
+            order by {inp} {inp2} 
+            """
+        )
+        print(f"[INFO] {cursor.fetchall()}")
 except Exception as _ex:
     print ("[INFO] Error while working with PostgreSQL", _ex)
 finally:
